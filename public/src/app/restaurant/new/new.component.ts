@@ -33,7 +33,7 @@ export class NewComponent implements OnInit {
 
   onSubmitRest() {
     this.restService.getRest(this.newRest.name).subscribe( info => {
-      if (info.test) {
+      if (info[Object.keys(info)[0]] === 'new') {
         this.restService.createRest(this.newRest).subscribe( data => {
           this.router.navigate(['/restaurants']);
           this.newRest = {

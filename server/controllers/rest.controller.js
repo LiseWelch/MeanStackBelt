@@ -14,8 +14,8 @@ module.exports.getOneRest = (req, res) => {
 
 module.exports.getRest = (req, res) => {
     Rest.findOne({ name: req.params.name })
-        .then(rest => res.json({test: false}))
-        .catch(err => res.json({test: true}))
+        .then(rest => res.json({test: rest._id }))
+        .catch(err => res.json({test: 'new'}))
 };
 
 module.exports.createRest = (req, res) => {

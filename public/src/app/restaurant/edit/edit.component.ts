@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Rest } from '../../models/rest.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestService } from '../../rest.service';
@@ -10,26 +10,38 @@ import { RestService } from '../../rest.service';
 })
 export class EditComponent implements OnInit {
 
-  curRest: Rest;
+  @Input() curRest: Rest;
+
+  OGname;
+  @Output() aTaskEventEmitter = new EventEmitter();
+
+  error;
 
   constructor(private rout: ActivatedRoute, private router: Router, private restService: RestService) { }
 
   ngOnInit() {
-    this.rout.params.subscribe(param => {
-      this.restService.getOneRest(param.id).subscribe(data => {
-        this.curRest = data;
-      });
-    });
+    this.OGname = this.curRest.name;
   }
 
   onCancel() {
+    this.curRest.name = this.OGname;
     this.router.navigate(['/restaurants']);
   }
 
   onSubmitRest() {
-    this.restService.updateRest(this.curRest).subscribe( data => {
-      this.router.navigate(['/restaurants']);
+    this.restService.getRest(this.curRest.name).subscribe( info => {
+      if ((info[Object.keys(info)[0]] === 'new') || (info[Object.keys(info)[0]] === this.curRest._id)) {
+        this.restService.updateRest(this.curRest).subscribe( data => {
+          this.aTaskEventEmitter.emit(false);
+        });
+      }  else {
+        this.error = 'Name is not unique';
+      }
     });
   }
+
+  triggerEvent() {
+  this.aTaskEventEmitter.emit(false);
+}
 
 }
