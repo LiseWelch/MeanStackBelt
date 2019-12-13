@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Rest } from '../../models/rest.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RestService } from '../../rest.service';
 
 @Component({
   selector: 'app-new',
@@ -7,9 +10,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewComponent implements OnInit {
 
-  constructor() { }
+  newRest: Rest = {
+    name: '',
+    cuisine: ''
+  };
+
+  error: string;
+
+  constructor(private rout: ActivatedRoute, private router: Router, private restService: RestService) { }
 
   ngOnInit() {
+    this.error = null;
+  }
+
+  onCancel() {
+    this.router.navigate(['/restaurants']);
+    this.newRest = {
+      name: '',
+      cuisine: ''
+      };
+  }
+
+  onSubmitRest() {
+    this.restService.getRest(this.newRest.name).subscribe( info => {
+      if (info.test) {
+        this.restService.createRest(this.newRest).subscribe( data => {
+          this.router.navigate(['/restaurants']);
+          this.newRest = {
+            name: '',
+            cuisine: ''
+          };
+      });
+    } else {
+      this.error = 'Name is not unique';
+    }
+    });
   }
 
 }

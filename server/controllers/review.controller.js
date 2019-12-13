@@ -1,7 +1,7 @@
 const Review = require("../models/review.model");
 
 module.exports.getAllReviews = (req, res) => {
-    Review.find({ RestID: req.params.id })
+    Review.find({ restID: req.params.id }).sort({ rating: 'descending'})
         .then(AllReviews => res.json(AllReviews))
         .catch(err => res.json(err));
 };

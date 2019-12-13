@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RestService } from '../rest.service';
 
 @Component({
   selector: 'app-restaurant',
@@ -7,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RestaurantComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router, private restService: RestService) {}
 
   ngOnInit() {
+    this.router.navigate(['/restaurants']);
   }
 
 }
